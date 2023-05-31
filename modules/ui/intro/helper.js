@@ -114,6 +114,7 @@ export function helpHtml(id, replacements) {
         line: t.html('modes.add_line.title'),
         area: t.html('modes.add_area.title'),
         note: t.html('modes.add_note.label'),
+        import: t.html('import.title'),
 
         circularize: t.html('operations.circularize.title'),
         continue: t.html('operations.continue.title'),
