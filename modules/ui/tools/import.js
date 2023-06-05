@@ -22,7 +22,7 @@ export function uiToolImport(context) {
     tool.render = function(selection) {
         tooltipBehavior = uiTooltip()
             .placement('bottom')
-            .title(() => t.append('import.title'))
+            .title(() => t.append('import.help'))
             .keys([key])
             .scrollContainer(context.container().select('.top-toolbar'));
 
@@ -82,10 +82,7 @@ export function uiToolImport(context) {
             .call(svgIcon('#iD-icon-load'));
 
         button
-            .append('span')
-            .attr('class', 'count')
-            .attr('aria-hidden', 'true')
-            .text('0');
+            .attr('class')
     };
     return tool;
 }
