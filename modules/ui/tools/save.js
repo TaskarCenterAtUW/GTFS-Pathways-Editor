@@ -5,7 +5,10 @@ import { modeSave } from '../../modes';
 import { svgIcon } from '../../svg';
 import { uiCmd } from '../cmd';
 import { uiTooltip } from '../tooltip';
-
+import { JXON } from '../../util/jxon';
+import { actionDiscardTags } from '../../actions/discard_tags';
+import { osmChangeset } from '../../osm';
+import { fileFetcher } from '../../core/file_fetcher';
 
 export function uiToolSave(context) {
 
@@ -28,11 +31,33 @@ export function uiToolSave(context) {
     function isDisabled() {
         return _numChanges === 0 || isSaving();
     }
+    
+    var _discardTags = {};
+    fileFetcher.get('discarded')
+        .then(function(d) { _discardTags = d; })
+        .catch(function() { /* ignore */ });
 
     function save(d3_event) {
         d3_event.preventDefault();
         if (!context.inIntro() && !isSaving() && history.hasChanges()) {
             context.enter(modeSave(context));
+             // Download changeset link
+        var changeset = new osmChangeset().update({ id: undefined });
+        var changes = history.changes(actionDiscardTags(history.difference(), _discardTags));
+
+        delete changeset.id;  // Export without chnageset_id
+
+        var data = JXON.stringify(changeset.osmChangeJXON(changes));
+        var blob = new Blob([data], {type: 'text/xml;charset=utf-8;'});
+        var fileName = 'changes.osc';
+            console.log(history.changes());
+                    const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'changeset.osc';
+        link.click();
+      
+        // Clean up the created URL object
+        URL.revokeObjectURL(link.href);
         }
     }
 
@@ -70,7 +95,6 @@ export function uiToolSave(context) {
                 .text(_numChanges);
         }
     }
-
 
     tool.render = function(selection) {
         tooltipBehavior = uiTooltip()
