@@ -31,7 +31,7 @@ export function uiToolSave(context) {
     function isDisabled() {
         return _numChanges === 0 || isSaving();
     }
-    
+
     var _discardTags = {};
     fileFetcher.get('discarded')
         .then(function(d) { _discardTags = d; })
@@ -41,7 +41,8 @@ export function uiToolSave(context) {
         d3_event.preventDefault();
         if (!context.inIntro() && !isSaving() && history.hasChanges()) {
             context.enter(modeSave(context));
-             // Download changeset link
+        
+        // Download changeset link
         var changeset = new osmChangeset().update({ id: undefined });
         var changes = history.changes(actionDiscardTags(history.difference(), _discardTags));
 
@@ -50,8 +51,8 @@ export function uiToolSave(context) {
         var data = JXON.stringify(changeset.osmChangeJXON(changes));
         var blob = new Blob([data], {type: 'text/xml;charset=utf-8;'});
         var fileName = 'changes.osc';
-            console.log(history.changes());
-                    const link = document.createElement('a');
+
+        const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'changeset.osc';
         link.click();
