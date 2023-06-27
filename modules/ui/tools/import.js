@@ -66,12 +66,20 @@ export function uiToolImport(context) {
                   function displayPointsOnMap(points) {
               
                     // Add imported points to the map
+                    var stopIdSet = new Set();
                     points.forEach(function(point) {
-                      const nodeId = point.id;
-                      const loc = [point.geometry.coordinates[0], point.geometry.coordinates[1]];
-                     const node = osmNode({ id: nodeId, loc: loc });
-                      context.perform(actionAddEntity(node), 'add imported point');
-                      console.log('Points added successfully');
+                      const nodeId = point.properties.stop_id;
+                      if(stopIdSet.has(nodeId)){
+                        console.log(nodeId);
+                        console.log('Invalid GeoJSON file. Stop ids should be unique.');
+                      }
+                      else {
+                        stopIdSet.add(nodeId);
+                        const loc = [point.geometry.coordinates[0], point.geometry.coordinates[1]];
+                        const node = osmNode({ id: nodeId, loc: loc });
+                        context.perform(actionAddEntity(node), 'add imported point');
+                        console.log('Points added successfully');
+                      }
                     });
                   }
 
