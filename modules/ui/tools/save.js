@@ -9,6 +9,8 @@ import { JXON } from '../../util/jxon';
 import { actionDiscardTags } from '../../actions/discard_tags';
 import { osmChangeset } from '../../osm';
 import { fileFetcher } from '../../core/file_fetcher';
+import { osmNode } from '../../osm';
+import { osmWay } from '../../osm';
 
 export function uiToolSave(context) {
 
@@ -41,6 +43,74 @@ export function uiToolSave(context) {
         d3_event.preventDefault();
         if (!context.inIntro() && !isSaving() && history.hasChanges()) {
             context.enter(modeSave(context));
+
+        const graph = context.graph();
+        
+        // Retrieve all nodes and ways from the graph's entities
+        const nodes = Object.values(graph.entities).filter(entity => entity instanceof osmNode);
+        const ways = Object.values(graph.entities).filter(entity => entity instanceof osmWay);
+
+        var nodeFeatures = [];
+        var wayFeatures = [];
+
+
+        if (nodes) {
+            // Convert nodes to GeoJSON Point features
+            nodeFeatures = nodes.map(node => {
+              const feature = {
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: node.loc,
+                },
+                properties: {
+                  stop_id: node.id,
+                  ...node.tags,
+                },
+              };
+              return feature;
+            });
+          }
+          
+          if (ways) {
+            // Convert ways to GeoJSON LineString features
+            wayFeatures = ways.map(way => {
+              const feature = {
+                type: 'Feature',
+                geometry: {
+                  type: 'LineString',
+                  coordinates: way.nodes.map(nodeId => graph.entity(nodeId).loc),
+                },
+                properties: {
+                  stop_id: way.id,
+                  ...way.tags,
+                },
+              };
+              return feature;
+            });
+          }
+
+        // Create a FeatureCollection combining nodeFeatures and wayFeatures
+        const featureCollection = {
+            type: 'FeatureCollection',
+            features: [...nodeFeatures, ...wayFeatures],
+        };
+
+        // Convert the featureCollection to GeoJSON string
+        const geoJSONString = JSON.stringify(featureCollection);
+
+        // Create a Blob object from the GeoJSON string
+        const blob = new Blob([geoJSONString], { type: 'application/json' });
+
+        // Create a download link for the Blob object
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = 'data.geojson'; // Set the desired file name
+
+        // Programmatically click the download link to trigger the download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
         
         // Download changeset link
         var changeset = new osmChangeset().update({ id: undefined });
@@ -49,11 +119,10 @@ export function uiToolSave(context) {
         delete changeset.id;  // Export without chnageset_id
 
         var data = JXON.stringify(changeset.osmChangeJXON(changes));
-        var blob = new Blob([data], {type: 'text/xml;charset=utf-8;'});
-        var fileName = 'changes.osc';
+        var blob2 = new Blob([data], {type: 'text/xml;charset=utf-8;'});
 
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
+        link.href = URL.createObjectURL(blob2);
         link.download = 'changeset.osc';
         link.click();
       

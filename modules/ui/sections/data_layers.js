@@ -63,6 +63,9 @@ export function uiSectionDataLayers(context) {
     }
 
     function toggleLayer(which) {
+        if(which == 'osm'){
+            window.confirm("Implement data license impact notifications");
+        }
         setLayer(which, !showsLayer(which));
     }
 
