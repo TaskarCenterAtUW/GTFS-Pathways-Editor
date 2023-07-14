@@ -1,8 +1,8 @@
 import { t } from '../../core/localizer';
 import { uiTooltip } from '../tooltip';
 import { uiSection } from '../section';
-import { osmNode } from '../../osm';
-import { select as d3_select } from 'd3-selection';
+import { osmNode, osmWay } from '../../osm';
+import {select, selectAll} from 'd3-selection';
 
 
 export function uiSectionMapStyleOptions(context) {
@@ -114,27 +114,76 @@ export function uiSectionMapStyleOptions(context) {
     }
 
     function applyLevelFilter(level) {
+        if(!level || level == ""){
+            return;
+        }
         var graph = context.graph();
         var nodes = Object.values(graph.entities).filter(entity => entity instanceof osmNode);
-        console.log(level);
-        console.log(nodes);
+        var ways = Object.values(graph.entities).filter(entity => entity instanceof osmWay);
 
         // Loop through all nodes and update the visibility based on the filter
         nodes.forEach(function(node) {
-            if (node.tags.level_id !== level) {
-                const nodeElement = document.getElementById(node.id);
-                if (nodeElement) {
-                    nodeElement.style.display = 'none';
-                  }              }
-                   else {
-                    const nodeElement = document.getElementById(node.id);
-                    if (nodeElement) {
-                        nodeElement.style.display = 'null';
-                      }              
-              }
-        });
+            if (!node.tags || !node.tags.level_id || (parseInt(node.tags.level_id) !== parseInt(level))) {
+            const selectedNodes = selectAll('.node')
+        .nodes();
+      
+      selectedNodes.forEach(n => {
+        const data = n.__data__;
+        const nodeId = data.id;
+        // Perform operations with the retrieved node data
+        if(nodeId == node.id){
+            select(n).style('display', 'none');
 
-    }
+        }
+      });
+        }
+        else{
+            const selectedNodes = selectAll('.node')
+            .nodes();
+          
+          selectedNodes.forEach(n => {
+            const data = n.__data__;
+            const nodeId = data.id;
+            // Perform operations with the retrieved node data
+            if(nodeId == node.id){
+                select(n).style('display', 'null');
+    
+            }});
+        }
+    });
+        
+                // Loop through all ways and update the visibility based on the filter
+                ways.forEach(function(way) {
+                    if (!way.tags || !way.tags.z1 || !way.tags.z2
+                         || ((parseInt(way.tags.z1) !== parseInt(level)) 
+                         && (parseInt(way.tags.z2) !== parseInt(level)))) {
+                    const selectedWays = selectAll('.way')
+                .nodes();
+              
+              selectedWays.forEach(n => {
+                const data = n.__data__;
+                const wayId = data.id;
+                // Perform operations with the retrieved node data
+                if(wayId == way.id){
+                    select(n).style('display', 'none');
+        
+                }
+              });
+                }
+                else{
+                    const selectedWays = selectAll('.way')
+                    .nodes();
+                  
+                    selectedWays.forEach(n => {
+                    const data = n.__data__;
+                    const wayId = data.id;
+                    // Perform operations with the retrieved node data
+                    if(wayId == node.id){
+                        select(n).style('display', 'null');
+            
+                    }});
+                }
+            });}
 
     context.map()
         .on('changeHighlighting.ui_style, changeAreaFill.ui_style', section.reRender);

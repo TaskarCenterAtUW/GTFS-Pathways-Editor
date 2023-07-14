@@ -826,6 +826,7 @@ en:
     description: Map Data
     key: U
     data_layers: Data Layers
+    level_filter: "Filter stops and pathways by level"
     layers:
       osm:
         tooltip: Map data from OpenStreetMap
