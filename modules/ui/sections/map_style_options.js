@@ -1,6 +1,9 @@
 import { t } from '../../core/localizer';
 import { uiTooltip } from '../tooltip';
 import { uiSection } from '../section';
+import { osmNode } from '../../osm';
+import { select as d3_select } from 'd3-selection';
+
 
 export function uiSectionMapStyleOptions(context) {
 
@@ -29,6 +32,8 @@ export function uiSectionMapStyleOptions(context) {
             .call(drawListItems, ['highlight_edits'], 'checkbox', 'visual_diff', toggleHighlightEdited, function() {
                 return context.surface().classed('highlight-edited');
             });
+
+        drawLevelFilterInput(selection);
     }
 
     function drawListItems(selection, data, type, name, change, active) {
@@ -89,6 +94,46 @@ export function uiSectionMapStyleOptions(context) {
 
     function setFill(d3_event, d) {
         context.map().activeAreaFill(d);
+    }
+
+    function drawLevelFilterInput(selection) {
+        var filterContainer = selection.append('div')
+            .attr('class', 'level-filter-container');
+
+        filterContainer.append('label')
+            .attr('class', 'level-filter-label')
+            .text(t('map_data.level_filter'));
+
+        var filterInput = filterContainer.append('input')
+            .attr('type', 'text')
+            .attr('class', 'level-filter-input')
+            .on('input', function() {
+                var filter = this.value.trim();
+                applyLevelFilter(filter);
+            });
+    }
+
+    function applyLevelFilter(level) {
+        var graph = context.graph();
+        var nodes = Object.values(graph.entities).filter(entity => entity instanceof osmNode);
+        console.log(level);
+        console.log(nodes);
+
+        // Loop through all nodes and update the visibility based on the filter
+        nodes.forEach(function(node) {
+            if (node.tags.level_id !== level) {
+                const nodeElement = document.getElementById(node.id);
+                if (nodeElement) {
+                    nodeElement.style.display = 'none';
+                  }              }
+                   else {
+                    const nodeElement = document.getElementById(node.id);
+                    if (nodeElement) {
+                        nodeElement.style.display = 'null';
+                      }              
+              }
+        });
+
     }
 
     context.map()

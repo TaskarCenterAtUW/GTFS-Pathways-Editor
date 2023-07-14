@@ -9,6 +9,8 @@ import { osmWay } from '../../osm';
 
 export function uiToolImport(context) {
 
+  var stopAndWayIdSet = new Set();
+
     var tool = {
         id: 'import',
         label: t.append('import.title')
@@ -308,14 +310,30 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                   }
                   }
 
+                  function generateUniqueId() {
+
+                    var uniqueId = 0;
+                    while(stopAndWayIdSet.has(uniqueId)){
+                      uniqueId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1;
+                    }
+                    return uniqueId;
+                  }
+
                   function importWays(ways) {
                     ways.forEach(function(way) {
-                      const wayId = way.properties.pathway_id;
+                      var wayId = way.properties.pathway_id;
+                      if(stopAndWayIdSet.has(wayId)){
+                        console.log(wayId);
+                        console.log('ids should be unique. Generating new id');
+                        wayId = generateUniqueId();
+                      }
+                      stopAndWayIdSet.add(wayId);
                       const fromNodeId = way.properties.from_stop_id;
                       const toNodeId = way.properties.to_stop_id;
                   
                       const fromNode = context.hasEntity(fromNodeId);
                       const toNode = context.hasEntity(toNodeId);
+
                   
                       if (!fromNode || !toNode) {
                         console.log('One or both nodes not found');
@@ -345,15 +363,14 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                   function displayPointsOnMap(points) {
               
                     // Add imported points to the map
-                    var stopIdSet = new Set();
                     points.forEach(function(point) {
-                      const nodeId = point.properties.stop_id;
-                      if(stopIdSet.has(nodeId)){
+                      var nodeId = point.properties.stop_id;
+                      if(stopAndWayIdSet.has(nodeId)){
                         console.log(nodeId);
-                        console.log('Invalid GeoJSON file. Stop ids should be unique.');
+                        console.log('ids should be unique. New id generated');
+                        nodeId = generateUniqueId();
                       }
-                      else {
-                        stopIdSet.add(nodeId);
+                        stopAndWayIdSet.add(nodeId);
                         const loc = [point.geometry.coordinates[0], point.geometry.coordinates[1]];
                         const node = osmNode({ id: nodeId, loc: loc });
                         // Iterate over the properties of the GeoJSON node
@@ -368,7 +385,6 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                         context.perform(actionAddEntity(node), 'add imported point');
                         console.log(node);
                         console.log('Points added successfully');
-                      }
                     });
                   }
 
