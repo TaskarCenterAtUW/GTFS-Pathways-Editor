@@ -3,8 +3,7 @@ import {
 } from 'd3-selection';
 
 import _debounce from 'lodash-es/debounce';
-import { uiToolDrawModes, uiToolNotes, uiToolSave, uiToolSidebarToggle, uiToolUndoRedo } from './tools';
-
+import { uiToolDrawModes, uiToolNotes, uiToolSave, uiToolSidebarToggle, uiToolUndoRedo, uiToolImport } from './tools';
 
 export function uiTopToolbar(context) {
 
@@ -13,6 +12,7 @@ export function uiTopToolbar(context) {
         notes = uiToolNotes(context),
         undoRedo = uiToolUndoRedo(context),
         save = uiToolSave(context);
+        importTool = uiToolImport(context);
 
     function notesEnabled() {
         var noteLayer = context.layers().layer('notes');
@@ -49,7 +49,7 @@ export function uiTopToolbar(context) {
                 tools = tools.concat([notes, 'spacer']);
             }
 
-            tools = tools.concat([undoRedo, save]);
+            tools = tools.concat([undoRedo, save, importTool]);
 
             var toolbarItems = bar.selectAll('.toolbar-item')
                 .data(tools, function(d) {
