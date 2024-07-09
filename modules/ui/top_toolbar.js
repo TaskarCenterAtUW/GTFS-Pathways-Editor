@@ -11,7 +11,7 @@ export function uiTopToolbar(context) {
         modes = uiToolDrawModes(context),
         notes = uiToolNotes(context),
         undoRedo = uiToolUndoRedo(context),
-        save = uiToolSave(context);
+        save = uiToolSave(context),
         importTool = uiToolImport(context);
 
     function notesEnabled() {

@@ -7,10 +7,8 @@ import { uiCmd } from '../cmd';
 import { uiTooltip } from '../tooltip';
 import { JXON } from '../../util/jxon';
 import { actionDiscardTags } from '../../actions/discard_tags';
-import { osmChangeset } from '../../osm';
+import { osmChangeset, osmNode, osmWay } from '../../osm';
 import { fileFetcher } from '../../core/file_fetcher';
-import { osmNode } from '../../osm';
-import { osmWay } from '../../osm';
 
 export function uiToolSave(context) {
 
@@ -45,7 +43,7 @@ export function uiToolSave(context) {
             context.enter(modeSave(context));
 
         const graph = context.graph();
-    
+
         // Retrieve all nodes and ways from the graph's entities
         const nodes = Object.values(graph.entities).filter(entity => entity instanceof osmNode);
         const ways = Object.values(graph.entities).filter(entity => entity instanceof osmWay);
@@ -71,7 +69,7 @@ export function uiToolSave(context) {
                 return feature;
             });
             }
-            
+
             if (ways) {
             // Convert ways to GeoJSON LineString features
             wayFeatures = ways.map(way => {
@@ -111,7 +109,7 @@ export function uiToolSave(context) {
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
-        
+
         // Download changeset link
         var changeset = new osmChangeset().update({ id: undefined });
         var changes = history.changes(actionDiscardTags(history.difference(), _discardTags));
@@ -125,11 +123,11 @@ export function uiToolSave(context) {
         link.href = URL.createObjectURL(blob2);
         link.download = 'changeset.osc';
         link.click();
-        
+
         // Clean up the created URL object
         URL.revokeObjectURL(link.href);
 
-        context.enter(modeBrowse(context));        
+        context.enter(modeBrowse(context));
         }
     }
 

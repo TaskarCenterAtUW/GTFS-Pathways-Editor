@@ -3,8 +3,7 @@ import { svgIcon } from '../../svg';
 import { uiCmd } from '../cmd';
 import { uiTooltip } from '../tooltip';
 import { actionAddEntity } from '../../actions';
-import { osmNode } from '../../osm';
-import { osmWay } from '../../osm';
+import { osmNode, osmWay } from '../../osm';
 
 
 export function uiToolImport(context) {
@@ -20,7 +19,7 @@ export function uiToolImport(context) {
     var tooltipBehavior = null;
     var key = uiCmd('⌘I');
 
-
+/*
 // Type of the location:
 // https://gtfs.org/reference/static/#stopstxt
 // - `0` (or blank): Stop (or Platform). A location where passengers board or disembark from a transit vehicle. Is called a platform when defined within a parent_station.
@@ -52,6 +51,7 @@ const ELEVATOR = '5'
 const FARE_GATE = '6'
 // - `7`: Exit gate: A pathway exiting a paid area into an unpaid area where proof of payment is not required to cross.
 const EXIT_GATE = '7'
+*/
 
 const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
 	const {
@@ -61,15 +61,15 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
 	} = {
 		logErrorMsg: console.error,
 		...opt,
-	}
+	};
 
-	const nodes = Object.create(null) // nodes, by stop_id
-	const stations = Object.create(null) // "top-most" parent_station, by stop_id
+	const nodes = Object.create(null); // nodes, by stop_id
+	const stations = Object.create(null); // "top-most" parent_station, by stop_id
 
   const resultData = [];
 
 	for await (const s of stopsSrc) {
-		const props = {}
+		const props = {};
 		nodes[s.stop_id] = [
 			parseFloat(s.stop_lon),
 			parseFloat(s.stop_lat),
@@ -80,28 +80,28 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
 				...props,
 				...nodeProps(s),
 			},
-		]
+		];
 
 		// stops.txt is sorted so that we get stations first.
 		stations[s.stop_id] = s.parent_station
 			? stations[s.parent_station] || s.parent_station
-			: s.stop_id
+			: s.stop_id;
 	}
 
-	const pws = Object.create(null) // pathways, grouped by station ID
+	const pws = Object.create(null); // pathways, grouped by station ID
 
 	for await (const pw of pathwaysSrc) {
-		const props = {}
+		const props = {};
 
 		const encodedPw = [
 			pw.pathway_id || undefined,
 			pw.from_stop_id,
 			pw.to_stop_id,
-			pw.pathway_mode ? parseInt(pw.pathway_mode) : undefined,
+			pw.pathway_mode ? parseInt(pw.pathway_mode, 10) : undefined,
 			pw.is_bidirectional === '1',
 			pw.length ? parseFloat(pw.length) : undefined,
-			pw.traversal_time ? parseInt(pw.traversal_time) : undefined,
-			pw.stair_count ? parseInt(pw.stair_count) : undefined,
+			pw.traversal_time ? parseInt(pw.traversal_time, 10) : undefined,
+			pw.stair_count ? parseInt(pw.stair_count, 10) : undefined,
 			pw.max_slope ? parseFloat(pw.max_slope) : undefined,
 			pw.min_width ? parseFloat(pw.min_width) : undefined,
 			pw.signposted_as || undefined,
@@ -110,38 +110,36 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
 				...props,
 				...pathwayProps(pw),
 			},
-		]
+		];
 
-		const fromStationId = stations[pw.from_stop_id]
+		const fromStationId = stations[pw.from_stop_id];
 		if (pws[fromStationId]) {
-			pws[fromStationId].push(encodedPw)
-		}
-		else {
-			pws[fromStationId] = [encodedPw]
+			pws[fromStationId].push(encodedPw);
+		} else {
+			pws[fromStationId] = [encodedPw];
 		}
 
-		const toStationId = stations[pw.to_stop_id]
+		const toStationId = stations[pw.to_stop_id];
 		if (toStationId !== fromStationId) {
 			if (pws[toStationId]) {
-				pws[toStationId].push(encodedPw)
-			}
-			else {
-				pws[toStationId] = [encodedPw]
+				pws[toStationId].push(encodedPw);
+			} else {
+				pws[toStationId] = [encodedPw];
 			}
 		}
 
 		if (pw.is_bidirectional === '1') {
-			const props = {}
+			const props = {};
 
 			const encodedPw = [
 				pw.pathway_id || undefined,
 				pw.to_stop_id,
 				pw.from_stop_id,
-				pw.pathway_mode ? parseInt(pw.pathway_mode) : undefined,
+				pw.pathway_mode ? parseInt(pw.pathway_mode, 10) : undefined,
 				pw.is_bidirectional === '1',
 				pw.length ? parseFloat(pw.length) : undefined,
-				pw.traversal_time ? parseInt(pw.traversal_time) : undefined,
-				pw.stair_count ? parseInt(pw.stair_count) : undefined,
+				pw.traversal_time ? parseInt(pw.traversal_time, 10) : undefined,
+				pw.stair_count ? parseInt(pw.stair_count, 10) : undefined,
 				pw.max_slope ? parseFloat(pw.max_slope) : undefined,
 				pw.min_width ? parseFloat(pw.min_width) : undefined,
 				pw.signposted_as || undefined,
@@ -150,46 +148,44 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
 					...props,
 					...pathwayProps(pw),
 				},
-			]
-	
-			const fromStationId = stations[pw.to_stop_id]
+			];
+
+			const fromStationId = stations[pw.to_stop_id];
 			if (pws[fromStationId]) {
-				pws[fromStationId].push(encodedPw)
+				pws[fromStationId].push(encodedPw);
+			} else {
+				pws[fromStationId] = [encodedPw];
 			}
-			else {
-				pws[fromStationId] = [encodedPw]
-			}
-	
-			const toStationId = stations[pw.from_stop_id]
+
+			const toStationId = stations[pw.from_stop_id];
 			if (toStationId !== fromStationId) {
 				if (pws[toStationId]) {
-					pws[toStationId].push(encodedPw)
-				}
-				else {
-					pws[toStationId] = [encodedPw]
+					pws[toStationId].push(encodedPw);
+				} else {
+					pws[toStationId] = [encodedPw];
 				}
 			}
 		}
 	}
 
 	for (const stationId in pws) {
-		let data = '{"type": "FeatureCollection", "features": ['
-		let first = true
+		let data = '{"type": "FeatureCollection", "features": [';
+		let first = true;
 		const addFeature = (feature) => {
-			data += (first ? '' : ',') + JSON.stringify(feature) + '\n'
-			first = false
-		}
+			data += (first ? '' : ',') + JSON.stringify(feature) + '\n';
+			first = false;
+		};
 
-		const nodesAdded = new Set()
+		const nodesAdded = new Set();
 		const addNode = (nodeId, pathwayId) => {
 			if (nodesAdded.has(nodeId)) return;
 			if (!(nodeId in nodes)) {
-				logErrorMsg(`node ${nodeId} does not exist, used in pathway ${pathwayId}`)
+				logErrorMsg(`node ${nodeId} does not exist, used in pathway ${pathwayId}`);
 				return;
 			}
-			nodesAdded.add(nodeId)
+			nodesAdded.add(nodeId);
 
-			const n = nodes[nodeId]
+			const n = nodes[nodeId];
 			// todo: n might be undefined!
 			addFeature({
 				type: 'Feature',
@@ -204,26 +200,26 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
 					type: 'Point',
 					coordinates: [n[0], n[1]],
 				},
-			})
-		}
+			});
+		};
 
 		for (const pw of pws[stationId]) {
 			const [
 				pathway_id,
 				from_stop_id, to_stop_id,
-			] = pw
-			addNode(from_stop_id, pathway_id)
-			addNode(to_stop_id, pathway_id)
+			] = pw;
+			addNode(from_stop_id, pathway_id);
+			addNode(to_stop_id, pathway_id);
 
-			const fromNode = nodes[from_stop_id]
+			const fromNode = nodes[from_stop_id];
 			if (!fromNode) {
-				logErrorMsg(`invalid from_stop_id "${from_stop_id}" in pathway ${pw[0]}`)
-				continue
+				logErrorMsg(`invalid from_stop_id "${from_stop_id}" in pathway ${pw[0]}`);
+				continue;
 			}
-			const toNode = nodes[to_stop_id]
+			const toNode = nodes[to_stop_id];
 			if (!toNode) {
-				logErrorMsg(`invalid to_stop_id "${to_stop_id}" in pathway ${pw[0]}`)
-				continue
+				logErrorMsg(`invalid to_stop_id "${to_stop_id}" in pathway ${pw[0]}`);
+				continue;
 			}
 
 			addFeature({
@@ -248,14 +244,14 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
 						[toNode[0], toNode[1]],
 					],
 				},
-			})
+			});
 		}
 
-		data += ']}'
+		data += ']}';
     resultData.add(data);
 	}
   return resultData;
-}
+};
     tool.render = function(selection) {
         tooltipBehavior = uiTooltip()
             .placement('bottom')
@@ -280,7 +276,7 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                 input.click();
 
                 function handleFileSelection(event) {
-                  for(var i = 0; i < event.target.files.length; i++){
+                  for (var i = 0; i < event.target.files.length; i++){
                     const file = event.target.files[i];
                     if (file) {
                       // Read the GeoJSON file
@@ -313,7 +309,7 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                   function generateUniqueId() {
 
                     var uniqueId = 0;
-                    while(stopAndWayIdSet.has(uniqueId)){
+                    while (stopAndWayIdSet.has(uniqueId)){
                       uniqueId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1;
                     }
                     return uniqueId;
@@ -322,7 +318,7 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                   function importWays(ways) {
                     ways.forEach(function(way) {
                       var wayId = 'w' + way.properties.pathway_id;
-                      if(stopAndWayIdSet.has(wayId)){
+                      if (stopAndWayIdSet.has(wayId)){
                         console.log(wayId);
                         console.log('ids should be unique. Generating new id');
                         wayId = generateUniqueId();
@@ -330,16 +326,16 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                       stopAndWayIdSet.add(wayId);
                       const fromNodeId = 'n' + way.properties.from_stop_id;
                       const toNodeId = 'n' + way.properties.to_stop_id;
-                  
+
                       const fromNode = context.hasEntity(fromNodeId);
                       const toNode = context.hasEntity(toNodeId);
 
-                  
+
                       if (!fromNode || !toNode) {
                         console.log('One or both nodes not found');
                         return;
                       }
-                  
+
                       const wayEntity = osmWay({ id: wayId, nodes: [fromNodeId, toNodeId] });
                       console.log(wayEntity);
                       wayEntity.tags = getTagsFromProperties(way.properties);
@@ -347,7 +343,7 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                       console.log('Ways added successfully');
                     });
                   }
-                  
+
                   // Helper function to extract tags from properties object
                   function getTagsFromProperties(properties) {
                     const tags = {};
@@ -358,14 +354,14 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
                     }
                     return tags;
                   }
-                  
+
 
                   function displayPointsOnMap(points) {
-              
+
                     // Add imported points to the map
                     points.forEach(function(point) {
                       var nodeId = point.properties.stop_id;
-                      if(stopAndWayIdSet.has(nodeId)){
+                      if (stopAndWayIdSet.has(nodeId)){
                         console.log(nodeId);
                         console.log('ids should be unique. New id generated');
                         nodeId = generateUniqueId();
@@ -395,7 +391,7 @@ const pathwaysGeoJSON = async (stopsSrc, pathwaysSrc, opt = {}) => {
             .call(svgIcon('#iD-icon-load'));
 
         button
-            .attr('class')
+            .attr('class');
     };
     return tool;
 }
