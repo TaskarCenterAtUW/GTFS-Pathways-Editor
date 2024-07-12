@@ -36,7 +36,11 @@ osmEntity.id.fromOSM = function(type, id) {
 
 
 osmEntity.id.toOSM = function(id) {
-    return id;
+    var match = id.match(/^[cnwr](-?\d+)$/);
+    if (match) {
+        return match[1];
+    }
+    return '';
 };
 
 
