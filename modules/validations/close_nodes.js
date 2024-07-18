@@ -9,7 +9,8 @@ import { geoExtent } from '../geo/extent';
 export function validationCloseNodes(context) {
     var type = 'close_nodes';
 
-    var pointThresholdMeters = 0.2;
+    // configurable value
+    var pointThresholdMeters = 0.5;
 
     var validation = function(entity, graph) {
         if (entity.type === 'node') {

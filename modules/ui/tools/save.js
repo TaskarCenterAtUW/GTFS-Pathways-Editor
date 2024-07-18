@@ -1,11 +1,14 @@
 import { interpolateRgb as d3_interpolateRgb } from 'd3-interpolate';
 
 import { t } from '../../core/localizer';
-import { modeSave } from '../../modes';
+import { modeSave, modeBrowse } from '../../modes';
 import { svgIcon } from '../../svg';
 import { uiCmd } from '../cmd';
 import { uiTooltip } from '../tooltip';
-
+import { JXON } from '../../util/jxon';
+import { actionDiscardTags } from '../../actions/discard_tags';
+import { osmChangeset, osmNode, osmWay } from '../../osm';
+import { fileFetcher } from '../../core/file_fetcher';
 
 export function uiToolSave(context) {
 
@@ -29,10 +32,102 @@ export function uiToolSave(context) {
         return _numChanges === 0 || isSaving();
     }
 
+    var _discardTags = {};
+    fileFetcher.get('discarded')
+        .then(function(d) { _discardTags = d; })
+        .catch(function() { /* ignore */ });
+
     function save(d3_event) {
         d3_event.preventDefault();
         if (!context.inIntro() && !isSaving() && history.hasChanges()) {
             context.enter(modeSave(context));
+
+        const graph = context.graph();
+
+        // Retrieve all nodes and ways from the graph's entities
+        const nodes = Object.values(graph.entities).filter(entity => entity instanceof osmNode);
+        const ways = Object.values(graph.entities).filter(entity => entity instanceof osmWay);
+
+        var nodeFeatures = [];
+        var wayFeatures = [];
+
+
+        if (nodes) {
+            // Convert nodes to GeoJSON Point features
+            nodeFeatures = nodes.map(node => {
+                const feature = {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: node.loc,
+                },
+                properties: {
+                    stop_id: node.id.substring(1),
+                    ...node.tags,
+                },
+                };
+                return feature;
+            });
+            }
+
+            if (ways) {
+            // Convert ways to GeoJSON LineString features
+            wayFeatures = ways.map(way => {
+                const feature = {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: way.nodes.map(nodeId => graph.entity(nodeId).loc),
+                },
+                properties: {
+                    pathway_id: way.id.substring(1),
+                    ...way.tags,
+                },
+                };
+                return feature;
+            });
+            }
+
+        // Create a FeatureCollection combining nodeFeatures and wayFeatures
+        const featureCollection = {
+            type: 'FeatureCollection',
+            features: [...nodeFeatures, ...wayFeatures],
+        };
+
+        // Convert the featureCollection to GeoJSON string
+        const geoJSONString = JSON.stringify(featureCollection);
+
+        // Create a Blob object from the GeoJSON string
+        const blob = new Blob([geoJSONString], { type: 'application/json' });
+
+        // Create a download link for the Blob object
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = 'data.geojson'; // Set the desired file name
+
+        // Programmatically click the download link to trigger the download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        // Download changeset link
+        var changeset = new osmChangeset().update({ id: undefined });
+        var changes = history.changes(actionDiscardTags(history.difference(), _discardTags));
+
+        delete changeset.id;  // Export without chnageset_id
+
+        var data = JXON.stringify(changeset.osmChangeJXON(changes));
+        var blob2 = new Blob([data], {type: 'text/xml;charset=utf-8;'});
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob2);
+        link.download = 'changeset.osc';
+        link.click();
+
+        // Clean up the created URL object
+        URL.revokeObjectURL(link.href);
+
+        context.enter(modeBrowse(context));
         }
     }
 
@@ -70,7 +165,6 @@ export function uiToolSave(context) {
                 .text(_numChanges);
         }
     }
-
 
     tool.render = function(selection) {
         tooltipBehavior = uiTooltip()
