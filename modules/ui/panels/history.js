@@ -1,5 +1,4 @@
 import { t, localizer } from '../../core/localizer';
-import { svgIcon } from '../../svg';
 
 
 export function uiPanelHistory(context) {
@@ -29,27 +28,6 @@ export function uiPanelHistory(context) {
             .append('span')
             .attr('class', 'user-name')
             .text(userName);
-
-        var links = selection
-            .append('div')
-            .attr('class', 'links');
-
-        if (osm) {
-            links
-                .append('a')
-                .attr('class', 'user-osm-link')
-                .attr('href', osm.userURL(userName))
-                .attr('target', '_blank')
-                .call(t.append('info_panels.history.profile_link'));
-        }
-
-        links
-            .append('a')
-            .attr('class', 'user-hdyc-link')
-            .attr('href', 'https://hdyc.neis-one.org/?' + userName)
-            .attr('target', '_blank')
-            .attr('tabindex', -1)
-            .text('HDYC');
     }
 
 
@@ -166,16 +144,6 @@ export function uiPanelHistory(context) {
                 .call(displayUser, note.comments[0].user);
         }
 
-        if (osm) {
-            selection
-                .append('a')
-                .attr('class', 'view-history-on-osm')
-                .attr('target', '_blank')
-                .attr('href', osm.noteURL(note))
-                .call(svgIcon('#iD-icon-out-link', 'inline'))
-                .append('span')
-                .call(t.append('info_panels.history.note_link_text'));
-        }
     }
 
 
@@ -186,26 +154,6 @@ export function uiPanelHistory(context) {
                 .call(t.append('info_panels.history.no_history'));
             return;
         }
-
-        var links = selection
-            .append('div')
-            .attr('class', 'links');
-
-        if (osm) {
-            links
-                .append('a')
-                .attr('class', 'view-history-on-osm')
-                .attr('href', osm.historyURL(entity))
-                .attr('target', '_blank')
-                .call(t.append('info_panels.history.history_link'));
-        }
-        links
-            .append('a')
-            .attr('class', 'pewu-history-viewer-link')
-            .attr('href', 'https://pewu.github.io/osm-history/#/' + entity.type + '/' + entity.osmId())
-            .attr('target', '_blank')
-            .attr('tabindex', -1)
-            .text('PeWu');
 
         var list = selection
             .append('ul');
