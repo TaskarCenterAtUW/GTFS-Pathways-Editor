@@ -5,14 +5,12 @@ import { geoSphericalDistance } from '../geo';
 import { modeBrowse } from '../modes/browse';
 import { modeSelect } from '../modes/select';
 import { uiCmd } from '../ui/cmd';
-import { utilGetAllNodes, utilTotalExtent } from '../util';
+import { utilTotalExtent } from '../util';
 
 
 export function operationDelete(context, selectedIDs) {
     var multi = (selectedIDs.length === 1 ? 'single' : 'multiple');
     var action = actionDeleteMultiple(selectedIDs);
-    var nodes = utilGetAllNodes(selectedIDs, context.graph());
-    var coords = nodes.map(function(n) { return n.loc; });
     var extent = utilTotalExtent(selectedIDs, context.graph());
 
 
@@ -72,8 +70,6 @@ export function operationDelete(context, selectedIDs) {
     operation.disabled = function() {
         if (extent.percentContainedIn(context.map().extent()) < 0.8) {
             return 'too_large';
-        } else if (someMissing()) {
-            return 'not_downloaded';
         } else if (selectedIDs.some(context.hasHiddenConnections)) {
             return 'connected_to_hidden';
         } else if (selectedIDs.some(protectedMember)) {
@@ -85,20 +81,6 @@ export function operationDelete(context, selectedIDs) {
         }
 
         return false;
-
-
-        function someMissing() {
-            if (context.inIntro()) return false;
-            var osm = context.connection();
-            if (osm) {
-                var missing = coords.filter(function(loc) { return !osm.isDataLoaded(loc); });
-                if (missing.length) {
-                    missing.forEach(function(loc) { context.loadTileAtLoc(loc); });
-                    return true;
-                }
-            }
-            return false;
-        }
 
         function hasWikidataTag(id) {
             var entity = context.entity(id);
