@@ -1,0 +1,136 @@
+{
+    "area": {
+        "name": "Area",
+        "tags": {},
+        "geometry": ["area"],
+        "matchScore": 0.1
+    },
+    "line": {
+        "name": "Line",
+        "tags": {},
+        "geometry": ["line"],
+        "matchScore": 0.1
+    },
+    "point": {
+        "name": "Point",
+        "tags": {},
+        "geometry": ["point", "vertex"],
+        "matchScore": 0.1
+    },
+    "relation": {
+        "name": "Relation",
+        "tags": {},
+        "geometry": ["relation"],
+        "matchScore": 0.1
+    },
+    "entrance_exit": {
+        "name":"Entrance",
+        "geometry": [
+            "point"
+        ],
+        "tags": {
+            "location_type":"2"
+        },
+        "icon":"fas-door-open"
+    },
+    "pathway/walkway": {
+        "name": "walkway",
+        "geometry": [
+            "line"
+        ],
+        "fields": [
+            "is_bidirectional",
+            "length",
+            "max_slope"
+        ],
+        "tags": {
+            "pathway_mode":"1"
+        },
+        "icon":"temaki-pedestrian_crosswalk"
+    },
+    "pathway/stairs": {
+        "name": "stairs",
+        "geometry": [
+            "line"
+        ],
+        "fields": [
+            "stair_count",
+            "is_bidirectional"
+        ],
+        "tags": {
+            "pathway_mode":"2"
+        },
+        "icon":"fas-stairs"
+    },
+    "pathway/moving_sidewalk": {
+        "name": "moving sidewalk",
+        "geometry": [
+            "line"
+        ],
+        "fields": [
+            "is_bidirectional",
+            "traversal_time",
+            "max_slope"
+        ],
+        "tags": {
+            "pathway_mode":"3"
+        },
+        "icon":"fas-person-running"
+    },
+    "pathway/escalator": {
+        "name": "escalator",
+        "geometry": [
+            "line"
+        ],
+        "fields": [
+            "is_bidirectional",
+            "traversal_time"
+        ],
+        "tags": {
+            "pathway_mode":"4"
+        },
+        "icon":"maki-entrance"
+    },
+    "pathway/elevator": {
+        "name": "elevator",
+        "geometry": [
+            "line"
+        ],
+        "fields": [
+            "is_bidirectional",
+            "traversal_time"
+        ],
+        "tags": {
+            "pathway_mode":"5"
+        },
+        "icon":"temaki-elevator"
+    },
+    "pathway/fare_gate": {
+        "name": "fare gate",
+        "geometry": [
+            "line"
+        ],
+        "fields": [
+            "length",
+            "is_bidirectional"
+        ],
+        "tags": {
+            "pathway_mode":"6"
+        },
+        "icon":"fas-circle-dollar-to-slot"
+    },
+    "pathway/exit_gate": {
+        "name": "exit gate",
+        "geometry": [
+            "line"
+        ],
+        "fields": [
+            "length"
+        ],
+        "tags": {
+            "pathway_mode":"7",
+            "is_bidirectional":"0"
+        },
+        "icon":"fas-arrow-right-from-bracket"
+    }
+}

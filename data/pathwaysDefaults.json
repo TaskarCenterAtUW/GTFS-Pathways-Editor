@@ -1,0 +1,21 @@
+{
+    "line": [
+        "pathway/walkway",
+        "category_fare_zone_boundaries",
+        "category_level_traversal",
+        "line"
+    ],
+    "point": [
+        "entrance_exit",
+        "point"
+    ],
+    "vertex": [
+        "point"
+    ],
+    "area": [
+        "area"
+    ],
+    "relation": [
+        "relation"
+    ]
+}

@@ -96,11 +96,15 @@ function buildData() {
     minifyJSON('data/qa_data.json', 'dist/data/qa_data.min.json'),
     minifyJSON('data/shortcuts.json', 'dist/data/shortcuts.min.json'),
     minifyJSON('data/territory_languages.json', 'dist/data/territory_languages.min.json'),
+    minifyJSON('data/pathwaysPresets.json', 'dist/data/pathwaysPresets.min.json'),
+    minifyJSON('data/pathwaysFields.json', 'dist/data/pathwaysFields.min.json'),
+    minifyJSON('data/pathwaysCategories.json', 'dist/data/pathwaysCategories.min.json'),
+    minifyJSON('data/pathwaysDefaults.json', 'dist/data/pathwaysDefaults.min.json'),
     Promise.all([
       // Fetch the icons that are needed by the expected tagging schema version
-      fetchOrRequire(`${presetsUrl}/dist/presets.min.json`),
-      fetchOrRequire(`${presetsUrl}/dist/preset_categories.min.json`),
-      fetchOrRequire(`${presetsUrl}/dist/fields.min.json`)
+      fetchOrRequire(`../data/pathwaysPresets.json`),
+      fetchOrRequire(`../data/pathwaysCategories.json`),
+      fetchOrRequire(`../data/pathwaysFields.json`)
     ])
     .then(responses => Promise.all(responses.map(response => response.json())))
     .then((results) => {
@@ -119,13 +123,6 @@ function buildData() {
           }
         }
       });
-    }).then(() =>
-      // also fetch the bleeding edge data too to make sure we're always hosting the latest icons
-      fetch('https://raw.githubusercontent.com/openstreetmap/id-tagging-schema/main/interim/icons.json')
-    ).then(response => response.json()).then(cuttingEdgeIcons => {
-      cuttingEdgeIcons
-        .filter(icon => /^fa[srb]-/.test(icon))
-        .forEach(icon => faIcons.add(icon));
     }).then(() => {
       // copy over only those Font Awesome icons that we need
       writeFaIcons(faIcons);
