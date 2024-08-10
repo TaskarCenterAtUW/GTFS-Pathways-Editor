@@ -7,9 +7,14 @@
     ],
     "point": [
         "entrance_exit",
+        "platform",
+        "station",
+        "node",
+        "boarding_area",
         "point"
     ],
     "vertex": [
+        "node",
         "point"
     ],
     "area": [
