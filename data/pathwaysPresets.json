@@ -64,8 +64,7 @@
             "wheelchair_boarding"
         ],
         "tags": {
-            "location_type":"1",
-            "parent_station":""
+            "location_type":"1"
         },
         "icon":"temaki-light_rail"
     },

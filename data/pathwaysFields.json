@@ -62,7 +62,11 @@
     },
     "parent_station": {
         "key": "parent_station",
-        "type": "number"
+        "type": "number",
+        "prerequisiteTag": {
+            "key": "location_type",
+            "valueNot": 1
+        }
     },
     "stop_name": {
         "key": "stop_name",
