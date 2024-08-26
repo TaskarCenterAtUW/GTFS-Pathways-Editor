@@ -1,0 +1,117 @@
+{ 
+    "testField": {
+    "key": "testField",
+    "type": "combo",
+    "autoSuggestions": false,
+    "customValues": false,
+    "options": [
+        "yes",
+        "manual",
+        "powered",
+        "no"
+    ]
+    },
+    "is_bidirectional": {
+        "key": "is_bidirectional",
+        "type": "radio",
+        "autoSuggestions": false,
+        "customValues": false,
+        "options": [
+            "yes",
+            "no"
+        ]
+    },
+    "length": {
+        "key": "length",
+        "type": "number",
+        "autoSuggestions": false
+    },
+    "traversal_time": {
+        "key": "traversal_time",
+        "type": "number",
+        "autoSuggestions": false
+    },
+    "stair_count": {
+        "key": "stair_count",
+        "type": "number",
+        "autoSuggestions": false
+    },
+    "max_slope": {
+        "key": "max_slope",
+        "type": "number",
+        "autoSuggestions": false
+    },
+    "min_width": {
+        "key": "min_width",
+        "type": "number",
+        "autoSuggestions": false
+    },
+    "signposted_as": {
+        "key": "signposted_as",
+        "type": "text",
+        "autoSuggestions": false
+    },
+    "reverse_signposted_as": {
+        "key": "reverse_signposted_as",
+        "type": "text",
+        "autoSuggestions": false
+    },
+    "level_id": {
+        "key": "level_id",
+        "type": "number"
+    },
+    "parent_station": {
+        "key": "parent_station",
+        "type": "number",
+        "prerequisiteTag": {
+            "key": "location_type",
+            "valueNot": 1
+        }
+    },
+    "stop_name": {
+        "key": "stop_name",
+        "type": "text"
+    },
+    "stop_code": {
+        "key": "stop_code",
+        "type": "text"
+    },
+    "tts_stop_name": {
+        "key": "tts_stop_name",
+        "type": "text"
+    },
+    "stop_desc": {
+        "key": "stop_desc",
+        "type": "textarea"
+    },
+    "zone_id": {
+        "key": "zone_id",
+        "type":"combo",
+        "options": [
+            "paid",
+            "unpaid"
+        ],
+        "customValues":true
+    },
+    "stop_url": {
+        "key": "stop_url",
+        "type": "url"
+    },
+    "station_timezone": {
+        "key": "stop_timezone",
+        "type": "text"
+    },
+    "wheelchair_boarding": {
+        "key": "wheelchair_boarding",
+        "type": "combo",
+        "options": [
+            "0 - No information",
+            "1 - Wheelchair Accessible",
+            "2 - Not Wheelchair Accessible"
+        ]
+    },
+    "platform_code": {
+        "key": "platform_code",
+        "type": "text"
+    }
+}

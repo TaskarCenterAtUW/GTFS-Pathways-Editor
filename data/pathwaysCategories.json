@@ -1,0 +1,17 @@
+{
+    "category_fare_zone_boundaries": {
+        "icon":"fas-circle-dollar-to-slot",
+        "members": [
+            "pathway/fare_gate",
+            "pathway/exit_gate"
+        ]
+    },
+    "category_level_traversal": {
+        "icon":"fas-arrow-down-up-across-line",
+        "members": [
+            "pathway/stairs",
+            "pathway/escalator",
+            "pathway/elevator"
+        ]
+    }
+}
