@@ -71,7 +71,8 @@
     "entrance_exit": {
         "name":"Entrance",
         "geometry": [
-            "point"
+            "point",
+            "vertex"
         ],
         "fields": [
             "stop_name",
@@ -93,7 +94,8 @@
     "node": {
         "name":"Generic Node",
         "geometry": [
-            "point"
+            "point",
+            "vertex"
         ],
         "fields": [
             "level_id",
@@ -116,7 +118,8 @@
     "boarding_area": {
         "name":"Boarding Area",
         "geometry": [
-            "point"
+            "point",
+            "vertex"
         ],
         "fields": [
             "level_id",
