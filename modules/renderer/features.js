@@ -97,9 +97,9 @@ export function rendererFeatures(context) {
     }
 
 
-    defineRule('points', function isPoint(tags, geometry) {
+    /* defineRule('points', function isPoint(tags, geometry) {
         return geometry === 'point';
-    }, 200);
+    }, 200); */
 
     defineRule('traffic_roads', function isTrafficRoad(tags) {
         return traffic_roads[tags.highway];
@@ -220,6 +220,26 @@ export function rendererFeatures(context) {
         }
         return false;
     });
+
+    // LEVELS FILTER
+    // clearly, this is hacky. After MVP users should configure global
+    // level values (min,max) which generate the necessary rules
+    defineRule('level_two', function isSecondLevel(tags) {
+        return tags.level_id === '2';
+    });
+    defineRule('level_one', function isFirstLevel(tags) {
+        return tags.level_id === '1';
+    });
+    defineRule('level_ground', function isGroundLevel(tags) {
+        return tags.level_id === '0';
+    });
+    defineRule('level_sub_one', function isSubOneLevel(tags) {
+        return tags.level_id === '-1';
+    });
+    defineRule('level_sub_two', function isSubTwoLevel(tags) {
+        return tags.level_id === '-2';
+    });
+
 
     // Lines or areas that don't match another feature filter.
     // IMPORTANT: The 'others' feature must be the last one defined,
@@ -488,8 +508,8 @@ export function rendererFeatures(context) {
 
     features.isHiddenFeature = function(entity, resolver, geometry) {
         if (!_hidden.length) return false;
-        if (!entity.version) return false;
-        if (_forceVisible[entity.id]) return false;
+        if (!entity.version && !entity.v) return false;
+        //if (_forceVisible[entity.id]) return false;
 
         var matches = Object.keys(features.getMatches(entity, resolver, geometry));
         return matches.length && matches.every(function(k) { return features.hidden(k); });
@@ -499,7 +519,7 @@ export function rendererFeatures(context) {
     features.isHiddenChild = function(entity, resolver, geometry) {
         if (!_hidden.length) return false;
         if (!entity.version || geometry === 'point') return false;
-        if (_forceVisible[entity.id]) return false;
+        //if (_forceVisible[entity.id]) return false;
 
         var parents = features.getParents(entity, resolver, geometry);
         if (!parents.length) return false;
@@ -538,7 +558,7 @@ export function rendererFeatures(context) {
 
     features.isHidden = function(entity, resolver, geometry) {
         if (!_hidden.length) return false;
-        if (!entity.version) return false;
+        if (!entity.version && !entity.v) return false;
 
         var fn = (geometry === 'vertex' ? features.isHiddenChild : features.isHiddenFeature);
         return fn(entity, resolver, geometry);
@@ -592,12 +612,13 @@ export function rendererFeatures(context) {
     };
 
 
-    // warm up the feature matching cache upon merging fetched data
-    context.history().on('merge.features', function(newEntities) {
-        if (!newEntities) return;
+   // warm up the feature matching cache upon merging fetched data
+    // try to hook into update events instead, which should include new entities as well
+    dispatch.on('change', function() {
         var handle = window.requestIdleCallback(function() {
             var graph = context.graph();
-            var types = utilArrayGroupBy(newEntities, 'type');
+            var graphEntities = Object.values(graph.entities);
+            var types = utilArrayGroupBy(graphEntities, 'type');
             // ensure that getMatches is called on relations before ways
             var entities = [].concat(types.relation || [], types.way || [], types.node || []);
             for (var i = 0; i < entities.length; i++) {

@@ -932,6 +932,21 @@ en:
     past_future:
       description: Past/Future Features
       tooltip: "Proposed, Construction, Abandoned, Demolished, etc."
+    level_sub_two:
+      description: Level -2
+      tooltip: "Station level two below ground"
+    level_sub_one:
+      description: Level -1
+      tooltip: "Station level one below ground"
+    level_ground:
+      description: Ground Level
+      tooltip: "Station level at ground"
+    level_one:
+      description: Level 1
+      tooltip: "Station level one above ground"
+    level_two:
+      description: Level 2
+      tooltip: "Station level two above ground"
     others:
       description: Other Features
       tooltip: "Everything Else"
