@@ -386,7 +386,7 @@ export function rendererFeatures(context) {
     features.isHiddenFeature = function(entity, resolver, geometry) {
         if (!_hidden.length) return false;
         if (!entity.version && !entity.v) return false;
-        //if (_forceVisible[entity.id]) return false;
+        if (_forceVisible[entity.id]) return false;
 
         var matches = Object.keys(features.getMatches(entity, resolver, geometry));
         return matches.length && matches.every(function(k) { return features.hidden(k); });
@@ -395,8 +395,8 @@ export function rendererFeatures(context) {
 
     features.isHiddenChild = function(entity, resolver, geometry) {
         if (!_hidden.length) return false;
-        if (!entity.version || geometry === 'point') return false;
-        //if (_forceVisible[entity.id]) return false;
+        if (!entity.v || geometry === 'point') return false;
+        if (_forceVisible[entity.id]) return false;
 
         var parents = features.getParents(entity, resolver, geometry);
         if (!parents.length) return false;
