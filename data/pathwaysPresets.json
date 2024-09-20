@@ -145,6 +145,7 @@
             "line"
         ],
         "fields": [
+            "level_id",
             "is_bidirectional",
             "length",
             "max_slope"
@@ -184,6 +185,7 @@
             "line"
         ],
         "fields": [
+            "level_id",
             "is_bidirectional",
             "traversal_time",
             "max_slope"
@@ -242,6 +244,7 @@
             "line"
         ],
         "fields": [
+            "level_id",
             "length",
             "is_bidirectional"
         ],
@@ -264,6 +267,7 @@
             "length"
         ],
         "moreFields": [
+            "level_id",
             "min_width",
             "signposted_as",
             "reverse_signposted_as"
