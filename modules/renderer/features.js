@@ -488,24 +488,5 @@ export function rendererFeatures(context) {
         }
     };
 
-
-   // warm up the feature matching cache upon merging fetched data
-    // try to hook into update events instead, which should include new entities as well
-    dispatch.on('change', function() {
-        var handle = window.requestIdleCallback(function() {
-            var graph = context.graph();
-            var graphEntities = Object.values(graph.entities);
-            var types = utilArrayGroupBy(graphEntities, 'type');
-            // ensure that getMatches is called on relations before ways
-            var entities = [].concat(types.relation || [], types.way || [], types.node || []);
-            for (var i = 0; i < entities.length; i++) {
-                var geometry = entities[i].geometry(graph);
-                features.getMatches(entities[i], graph, geometry);
-            }
-        });
-        _deferred.add(handle);
-    });
-
-
     return features;
 }
