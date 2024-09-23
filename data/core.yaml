@@ -858,7 +858,7 @@ en:
     style_options: Style Options
     highlight_edits:
       key: G
-    map_features: Map Features
+    map_features: Toggle Features By Level
     autohidden: "These features have been automatically hidden because too many would be shown on the screen.  You can zoom in to edit them."
     osmhidden: "These features have been automatically hidden because the OpenStreetMap layer is hidden."
   visual_diff:
@@ -932,6 +932,21 @@ en:
     past_future:
       description: Past/Future Features
       tooltip: "Proposed, Construction, Abandoned, Demolished, etc."
+    level_sub_two:
+      description: Level -2
+      tooltip: "Station level two below ground"
+    level_sub_one:
+      description: Level -1
+      tooltip: "Station level one below ground"
+    level_ground:
+      description: Ground Level
+      tooltip: "Station level at ground"
+    level_one:
+      description: Level 1
+      tooltip: "Station level one above ground"
+    level_two:
+      description: Level 2
+      tooltip: "Station level two above ground"
     others:
       description: Other Features
       tooltip: "Everything Else"
