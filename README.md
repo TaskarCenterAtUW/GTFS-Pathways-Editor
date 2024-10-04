@@ -1,37 +1,61 @@
-# iD - friendly JavaScript editor for [OpenStreetMap](https://www.openstreetmap.org/)
+# JavaScript editor for [GTFS Pathways Data](https://gtfs.org/documentation/schedule/examples/pathways/#)
 
+*TODO: Update build workflow*
 [![build](https://github.com/openstreetmap/iD/workflows/build/badge.svg)](https://github.com/openstreetmap/iD/actions?query=workflow%3A%22build%22)
 
 ## Basics
 
-* iD is a JavaScript [OpenStreetMap](https://www.openstreetmap.org/) editor.
-* It's intentionally simple. It lets you do the most basic tasks while not breaking other people's data.
+A JavaScript-based tool to map transit stations, using the [GTFS Pathways Data](https://gtfs.org/documentation/schedule/examples/pathways/#) data specification. Developed by the [Taskar Center for Accessible Technology](https://tcat.cs.washington.edu/).  
+
 * It supports all popular modern desktop browsers: Chrome, Firefox, Safari, Opera, and Edge.
-* iD is not yet designed for mobile browsers, but this is something we hope to add!
+* Pathways Editor is a fork of [iD OpenStreetMap Editor](https://github.com/openstreetmap/iD/tree/develop)
 * Data is rendered with [d3.js](https://d3js.org/).
+* Check out [our roadmap](ROADMAP.md) for current & in-development features.
 
-## Participate!
+## Local Installation
 
-* Read the project [Code of Conduct](CODE_OF_CONDUCT.md) and remember to be nice to one another.
-* Read up on [Contributing and the code style of iD](CONTRIBUTING.md).
-* See [open issues in the issue tracker](https://github.com/openstreetmap/iD/issues?state=open)
-if you're looking for something to do.
-* [Translate!](https://github.com/openstreetmap/iD/blob/develop/CONTRIBUTING.md#translating)
-* Test a prerelease version of iD:
-  * Stable mirror of `release` branch: https://ideditor-release.netlify.app
-  * Development mirror of `develop` branch + latest translations: https://ideditor.netlify.app
+Quick steps to install, build and run pathways locally:
 
-Come on in, the water's lovely. More help? Ping `Martin Raifer`/`tyr_asd` or `bhousel` on:
-* [OpenStreetMap US Slack](https://slack.openstreetmap.us/) (`#id` channel)
-* [OpenStreetMap Discord](https://discord.gg/openstreetmap) (`#id` channel)
-* [OpenStreetMap IRC](https://wiki.openstreetmap.org/wiki/IRC) (`irc.oftc.net`, in `#osm-dev`)
-* [OpenStreetMap `dev` mailing list](https://wiki.openstreetmap.org/wiki/Mailing_lists)
+### Building Pathways Editor
 
-## Installation
+1. cd into the project folder
+2. `npm clean-install` to install dependencies (`npm install` also works, but is slower as it also checks for available updates for the to be installed dependencies)
+3. `npm run all` to generate static assets (translation strings, icons, etc.)
+4. `npm start` to start up a development instance locally
+5. open http://127.0.0.1:8080 in a web browser
 
-Follow the steps in the [how to get started guide](https://github.com/openstreetmap/iD/wiki/How-to-get-started#build-and-test-instructions) on how to install, build and run iD locally.
+
+The development server refreshes itself automatically whenever you change something in the code (except for static assets like translation strings, icons, etc.). However, this does not yet support hot code reloading, so you need to refresh the page in the browser in order to get the respective changes.
+
+### Other Commands
+
+A few more useful commands are:
+
+* `npm test` runs test suite: please execute these before submitting a pull request!
+* `npm lint` checks for for code formatting mistakes
+* `npm run build` generates a production build, whose results (static html, js, css and assets) are written to the dist directory. This directory is self-contained; you can copy it into the public directory of your webserver to deploy.
+
+## Development Information
+
+Pathways Editor is a fork from iD Editor, an open-source project with 10+ years of development history. For this reason, development can be tricky to jump into. The best way to get familiar with the code style and patterns is to check out the documentation for iD Editor: [How to Get Started with iD Editor](https://github.com/openstreetmap/iD/wiki/How-to-get-started#build-and-test-instructions)
+
+Other resources:
+
+* iD Editor [architecture documentation](https://github.com/openstreetmap/iD/blob/develop/ARCHITECTURE.md) covers the basic functions of the code base
+* Read up on [contributing and development style](CONTRIBUTING.md)
+* See [open issues in the issue tracker](https://github.com/TaskarCenterAtUW/GTFS-Pathways-Editor/pulls?state=open)
+if you're looking for contribution opportunities.
+* TODO: add instructions for testing pre-release versions if we want to support that
+
+Need help? Visit us at:
+* [OpenSidewalks Slack](https://opensidewalks.slack.com/) (`#general` channel)
+
 
 ## License
+
+*TODO: Update License to be accurate*
+
+The following is the license information for iD: 
 
 iD is available under the [ISC License](https://opensource.org/licenses/ISC).
 See the [LICENSE.md](LICENSE.md) file for more details.
@@ -53,4 +77,5 @@ iD also bundles portions of the following open source software.
 
 ## Thank you
 
-Initial development of iD was made possible by a [grant of the Knight Foundation](https://www.mapbox.com/blog/knight-invests-openstreetmap/).
+*TODO: Update with grant information*
+
