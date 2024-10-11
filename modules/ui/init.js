@@ -314,23 +314,12 @@ export function uiInit(context) {
         issueLinks
             .append('a')
             .attr('target', '_blank')
-            .attr('href', 'https://github.com/openstreetmap/iD/issues')
+            .attr('href', 'https://github.com/TaskarCenterAtUW/GTFS-Pathways-Editor/pulls')
             .attr('aria-label', t('report_a_bug'))
             .call(svgIcon('#iD-icon-bug', 'light'))
             .call(uiTooltip()
                 .title(() => t.append('report_a_bug'))
                 .placement('top'));
-
-
-        aboutList
-            .append('li')
-            .attr('class', 'version')
-            .call(uiVersion(context));
-
-        if (!context.embed()) {
-            aboutList
-                .call(uiAccount(context));
-        }
 
 
         // Setup map dimensions and move map to initial center/zoom.

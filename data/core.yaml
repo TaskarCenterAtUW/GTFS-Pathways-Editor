@@ -582,6 +582,7 @@ en:
   logout: Log Out
   loading_auth: "Connecting to OpenStreetMap..."
   report_a_bug: Report a bug
+  visit_GitHub: Link to GitHub
   help_translate: Help translate
   sidebar:
     key: '`'
