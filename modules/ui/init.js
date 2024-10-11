@@ -14,7 +14,6 @@ import { utilGetDimensions } from '../util/dimensions';
 
 import { uiAccount } from './account';
 import { uiAttribution } from './attribution';
-import { uiContributors } from './contributors';
 import { uiEditMenu } from './edit_menu';
 import { uiFeatureInfo } from './feature_info';
 import { uiFlash } from './flash';
@@ -289,11 +288,6 @@ export function uiInit(context) {
             .append('ul')
             .attr('class', 'map-footer-list');
 
-        aboutList
-            .append('li')
-            .attr('class', 'user-list')
-            .call(uiContributors(context));
-
         var apiConnections = context.connection().apiConnections();
         if (apiConnections && apiConnections.length > 1) {
             aboutList
@@ -327,15 +321,6 @@ export function uiInit(context) {
                 .title(() => t.append('report_a_bug'))
                 .placement('top'));
 
-        issueLinks
-            .append('a')
-            .attr('target', '_blank')
-            .attr('href', 'https://github.com/openstreetmap/iD/blob/develop/CONTRIBUTING.md#translating')
-            .attr('aria-label', t('help_translate'))
-            .call(svgIcon('#iD-icon-translate', 'light'))
-            .call(uiTooltip()
-                .title(() => t.append('help_translate'))
-                .placement('top'));
 
         aboutList
             .append('li')

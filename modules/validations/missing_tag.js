@@ -38,6 +38,10 @@ export function validationMissingTag(context) {
         return entity.type === 'relation' && !entity.tags.type;
     }
 
+    function isUnknownLevel(entity) {
+        return entity.type === 'node' && !entity.tags.level_id;
+    }
+
     var validation = function checkMissingTag(entity, graph) {
 
         var subtype;
@@ -66,14 +70,22 @@ export function validationMissingTag(context) {
             subtype = 'highway_classification';
         }
 
+        // flag missing levels even if it's part of a relation
+        if (!subtype && isUnknownLevel(entity)) {
+            subtype = 'unknown_level'
+        }
+
         if (!subtype) return [];
 
         var messageID = subtype === 'highway_classification' ? 'unknown_road' : 'missing_tag.' + subtype;
         var referenceID = subtype === 'highway_classification' ? 'unknown_road' : 'missing_tag';
 
+        var messageID = subtype === 'unknown_level' ? 'missing_level' : 'missing_tag.' + subtype;
+        var referenceID = subtype === 'unknown_level' ? 'missing_level' : 'missing_tag';
+
         // can always delete if the user created it in the first place..
         var canDelete = (entity.version === undefined || entity.v !== undefined);
-        var severity = (canDelete && subtype !== 'highway_classification') ? 'error' : 'warning';
+        var severity = (canDelete && subtype !== 'unknown_level') ? 'error' : 'warning';
 
         return [new validationIssue({
             type: type,
@@ -91,14 +103,11 @@ export function validationMissingTag(context) {
 
                 var fixes = [];
 
-                var selectFixType = subtype === 'highway_classification' ? 'select_road_type' : 'select_preset';
+                var selectFixType = subtype === 'highway_classification' ? 'select_road_type' : 'address_the_concern';
 
                 fixes.push(new validationIssueFix({
                     icon: 'iD-icon-search',
                     title: t.append('issues.fix.' + selectFixType + '.title'),
-                    onClick: function(context) {
-                        context.ui().sidebar.showPresetList();
-                    }
                 }));
 
                 var deleteOnClick;
@@ -116,14 +125,14 @@ export function validationMissingTag(context) {
                     };
                 }
 
-                fixes.push(
+                /* fixes.push(
                     new validationIssueFix({
                         icon: 'iD-operation-delete',
                         title: t.append('issues.fix.delete_feature.title'),
                         disabledReason: disabledReasonID ? t('operations.delete.' + disabledReasonID + '.single') : undefined,
                         onClick: deleteOnClick
                     })
-                );
+                ); */
 
                 return fixes;
             }
