@@ -1,42 +1,58 @@
----
-title: "iD"
-layout: default
----
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>iD</title>
+    <link rel='stylesheet' href='iD.css'>
+    <link rel='icon' type='image/png' href='data:image/png;base64,iVBORw0KGgo='>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
+    <meta name='apple-mobile-web-app-capable' content='yes'/>
+    <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'/>
+    <style type='text/css'>
+      /* apply document-level styling to standalone iD only */
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        /* disable elastic page bounce upon scroll */
+        overflow: hidden;
+      }
+    </style>
+  </head>
 
-<div class='pad4 center header clearfix'>
-  <h1>{{page.title}}</h1>
-  <h2 class='margin2 col8'><a href='https://blog.mapbox.com/new-map-editor-launches-on-openstreetmap-org-13956033d0c9'>iD has officially launched.</a> Head over to <a href='https://www.openstreetmap.org/edit?editor=id'>openstreetmap.org to start mapping now with iD.</a></h2>
-  <p class='margin2 col8'>iD is open source. <a href="https://github.com/openstreetmap/iD">Start contributing on GitHub</a>.</p>
-</div>
+  <body>
+    <div id='id-container'></div>
 
-  <div class='footer center pad4 col12'>
-    <ul>
-      <li>A project for <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> funded by <a href='https://blog.mapbox.com/large-investment-in-openstreetmap-from-knight-foundation-cf7aa00534db'>The Knight Foundation</a></li>
-      <li>Released under the <a href='https://opensource.org/licenses/ISC'>ISC License</a></li>
-    </ul>
-  </div>
+    <script>
+      var container = document.getElementById('id-container');
+      var newScript = document.createElement('script');
+      newScript.type = 'text/javascript';
+      newScript.onload = checkScript;
+      newScript.onerror = checkScript;
+      newScript.src = 'iD.min.js';
 
-</div>
+      document.getElementsByTagName('head')[0].appendChild(newScript);
 
-<script>
-var instance = 'http://openstreetmap.us/iD/release/';
-function geoSuccess(position) {
-    window.location = instance + '#' +
-        'map=19.00/' + position.coords.longitude + '/' + position.coords.latitude;
-}
-function geoError(position) {
-    window.location = instance;
-}
-document.getElementById('start-mapping').onclick = function() {
-    if (navigator.geolocation) {
-        this.className += ' loading';
-        // handle firefox's weird implementation
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=675533
-        window.setTimeout(geoError, 4000);
-        navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
-    } else {
-        geoError();
-    }
-    return false;
-};
-</script>
+
+      function checkScript() {
+        if (typeof iD === 'undefined' || !iD.utilDetect().support) {
+          container.innerHTML = 'Sorry, your browser is not currently supported. Please use another <a href="https://github.com/openstreetmap/iD#basics">browser</a> or <a href="https://wiki.openstreetmap.org/wiki/Editors">editor</a> to contribute to the map.';
+          container.style.padding = '20px';
+
+        } else {
+          var context = iD.coreContext()
+            .assetPath('')
+            .containerNode(container);
+          context.init();
+
+          // disable boundaries (unless we have an explicit disable_features list)
+          var q = iD.utilStringQs(window.location.hash);
+          if (!q.hasOwnProperty('disable_features')) {
+            context.features().disable('boundaries');
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
