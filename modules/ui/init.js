@@ -12,9 +12,7 @@ import { svgDefs, svgIcon } from '../svg';
 import { utilDetect } from '../util/detect';
 import { utilGetDimensions } from '../util/dimensions';
 
-import { uiAccount } from './account';
 import { uiAttribution } from './attribution';
-import { uiContributors } from './contributors';
 import { uiEditMenu } from './edit_menu';
 import { uiFeatureInfo } from './feature_info';
 import { uiFlash } from './flash';
@@ -37,7 +35,6 @@ import { uiSplash } from './splash';
 import { uiStatus } from './status';
 import { uiTooltip } from './tooltip';
 import { uiTopToolbar } from './top_toolbar';
-import { uiVersion } from './version';
 import { uiZoom } from './zoom';
 import { uiZoomToSelection } from './zoom_to_selection';
 import { uiCmd } from './cmd';
@@ -289,11 +286,6 @@ export function uiInit(context) {
             .append('ul')
             .attr('class', 'map-footer-list');
 
-        aboutList
-            .append('li')
-            .attr('class', 'user-list')
-            .call(uiContributors(context));
-
         var apiConnections = context.connection().apiConnections();
         if (apiConnections && apiConnections.length > 1) {
             aboutList
@@ -320,32 +312,12 @@ export function uiInit(context) {
         issueLinks
             .append('a')
             .attr('target', '_blank')
-            .attr('href', 'https://github.com/openstreetmap/iD/issues')
+            .attr('href', 'https://github.com/TaskarCenterAtUW/GTFS-Pathways-Editor/pulls')
             .attr('aria-label', t('report_a_bug'))
             .call(svgIcon('#iD-icon-bug', 'light'))
             .call(uiTooltip()
                 .title(() => t.append('report_a_bug'))
                 .placement('top'));
-
-        issueLinks
-            .append('a')
-            .attr('target', '_blank')
-            .attr('href', 'https://github.com/openstreetmap/iD/blob/develop/CONTRIBUTING.md#translating')
-            .attr('aria-label', t('help_translate'))
-            .call(svgIcon('#iD-icon-translate', 'light'))
-            .call(uiTooltip()
-                .title(() => t.append('help_translate'))
-                .placement('top'));
-
-        aboutList
-            .append('li')
-            .attr('class', 'version')
-            .call(uiVersion(context));
-
-        if (!context.embed()) {
-            aboutList
-                .call(uiAccount(context));
-        }
 
 
         // Setup map dimensions and move map to initial center/zoom.

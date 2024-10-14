@@ -582,6 +582,7 @@ en:
   logout: Log Out
   loading_auth: "Connecting to OpenStreetMap..."
   report_a_bug: Report a bug
+  visit_GitHub: Link to GitHub
   help_translate: Help translate
   sidebar:
     key: '`'
@@ -1080,9 +1081,9 @@ en:
     walkthrough: "Start the Walkthrough"
     start: "Edit now"
   source_switch:
-    live: live
+    live: "Online Mode"
     lose_changes: "You have unsaved changes. Switching the map server will discard them. Are you sure you want to switch servers?"
-    dev: dev
+    dev: "Offline Mode"
   version:
     whats_new: "What's new in iD {version}"
   tag_reference:
@@ -1936,6 +1937,9 @@ en:
     unknown_road:
       message: "{feature} has no classification"
       reference: "Roads without a specific type may not appear in maps or routing."
+    missing_level:
+      message: "{feature} has no level"
+      reference: "Features without a level will not be mapped properly."
     impossible_oneway:
       title: Impossible One-Ways
       tip: "Find route issues with one-way features"

@@ -1,7 +1,7 @@
 import { dispatch as d3_dispatch } from 'd3-dispatch';
 
 import { prefs } from '../core/preferences';
-import { osmEntity, osmLifecyclePrefixes } from '../osm';
+import { osmEntity } from '../osm';
 import { utilRebind } from '../util/rebind';
 import { utilArrayGroupBy, utilArrayUnion, utilQsString, utilStringQs } from '../util';
 
@@ -10,39 +10,6 @@ export function rendererFeatures(context) {
     var dispatch = d3_dispatch('change', 'redraw');
     var features = utilRebind({}, dispatch, 'on');
     var _deferred = new Set();
-
-    var traffic_roads = {
-        'motorway': true,
-        'motorway_link': true,
-        'trunk': true,
-        'trunk_link': true,
-        'primary': true,
-        'primary_link': true,
-        'secondary': true,
-        'secondary_link': true,
-        'tertiary': true,
-        'tertiary_link': true,
-        'residential': true,
-        'unclassified': true,
-        'living_street': true,
-        'busway': true
-    };
-
-    var service_roads = {
-        'service': true,
-        'road': true,
-        'track': true
-    };
-
-    var paths = {
-        'path': true,
-        'footway': true,
-        'cycleway': true,
-        'bridleway': true,
-        'steps': true,
-        'ladder': true,
-        'pedestrian': true
-    };
 
     var _cullFactor = 1;
     var _cache = {};
