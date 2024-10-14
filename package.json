@@ -21,7 +21,7 @@
     "build:js:watch": "node config/esbuild.config.mjs --watch",
     "clean": "shx rm -f dist/esbuild.json dist/*.js dist/*.map dist/*.css dist/img/*.svg",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist",
     "dist": "run-p dist:**",
     "dist:mapillary": "shx mkdir -p dist/mapillary-js && shx cp -R node_modules/mapillary-js/dist/* dist/mapillary-js/",
     "dist:pannellum": "shx mkdir -p dist/pannellum && shx cp -R node_modules/pannellum/build/* dist/pannellum/",
