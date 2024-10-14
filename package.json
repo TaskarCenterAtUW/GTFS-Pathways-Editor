@@ -4,7 +4,7 @@
   "description": "A friendly editor for OpenStreetMap",
   "main": "dist/iD.min.js",
   "repository": "github:openstreetmap/iD",
-  "homepage": "https://TaskarCenterAtUW.github.io/GTFS-Pathways-Editor",
+  "homepage": "https://TaskarCenterAtUW.github.io/GTFS-Pathways-Editor/dist",
   "bugs": "https://github.com/openstreetmap/iD/issues",
   "keywords": [
     "editor",
