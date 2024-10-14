@@ -35,10 +35,10 @@ export function coreFileFetcher() {
     'presets_package': presetsCdnUrl.replace('{presets_version}', presetsVersion) + 'package.json',
     'deprecated': presetsCdnUrl + 'dist/deprecated.min.json',
     'discarded': presetsCdnUrl + 'dist/discarded.min.json',
-    'preset_categories': presetsCdnUrl + 'dist/preset_categories.min.json',
-    'preset_defaults': presetsCdnUrl + 'dist/preset_defaults.min.json',
-    'preset_fields': presetsCdnUrl + 'dist/fields.min.json',
-    'preset_presets': presetsCdnUrl + 'dist/presets.min.json',
+    'preset_categories': 'data/pathwaysCategories.min.json',
+    'preset_defaults': 'data/pathwaysDefaults.min.json',
+    'preset_fields': 'data/pathwaysFields.min.json',
+    'preset_presets': 'data/pathwaysPresets.min.json',
     'wmf_sitematrix': wmfSitematrixCdnUrl.replace('{version}', '0.1') + 'wikipedia.min.json'
   };
 

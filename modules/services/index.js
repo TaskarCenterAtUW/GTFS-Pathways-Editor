@@ -4,7 +4,6 @@ import serviceOsmose from './osmose';
 import serviceMapillary from './mapillary';
 import serviceMapRules from './maprules';
 import serviceNominatim from './nominatim';
-import serviceNsi from './nsi';
 import serviceKartaview from './kartaview';
 import serviceVegbilder from './vegbilder';
 import serviceOsm from './osm';
@@ -23,7 +22,6 @@ export let services = {
   improveOSM: serviceImproveOSM,
   osmose: serviceOsmose,
   mapillary: serviceMapillary,
-  nsi: serviceNsi,
   kartaview: serviceKartaview,
   vegbilder: serviceVegbilder,
   osm: serviceOsm,
@@ -44,7 +42,6 @@ export {
   serviceMapillary,
   serviceMapRules,
   serviceNominatim,
-  serviceNsi,
   serviceKartaview,
   serviceVegbilder,
   serviceOsm,

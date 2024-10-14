@@ -7,8 +7,6 @@ const ociCdnUrl = ENV__ID_OCI_CDN_URL
   || 'https://cdn.jsdelivr.net/npm/osm-community-index@{version}/';
 const wmfSitematrixCdnUrl = ENV__ID_WMF_SITEMATRIX_CDN_URL
   || 'https://cdn.jsdelivr.net/npm/wmf-sitematrix@{version}/';
-const nsiCdnUrl = ENV__ID_NSI_CDN_URL
-  || 'https://cdn.jsdelivr.net/npm/name-suggestion-index@{version}/';
 
 // api urls and settings
 const defaultOsmApiConnections = {
@@ -60,7 +58,6 @@ export {
   presetsCdnUrl,
   ociCdnUrl,
   wmfSitematrixCdnUrl,
-  nsiCdnUrl,
   osmApiConnections,
   taginfoApiUrl,
   nominatimApiUrl,

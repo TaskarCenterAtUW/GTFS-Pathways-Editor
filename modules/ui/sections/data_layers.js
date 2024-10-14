@@ -33,8 +33,6 @@ export function uiSectionDataLayers(context) {
             .append('div')
             .attr('class', 'data-layer-container')
             .merge(container)
-            .call(drawOsmItems)
-            .call(drawQAItems)
             .call(drawCustomDataItems)
             .call(drawVectorItems)      // Beta - Detroit mapping challenge
             .call(drawPanelItems);
@@ -65,117 +63,6 @@ export function uiSectionDataLayers(context) {
 
     function toggleLayer(which) {
         setLayer(which, !showsLayer(which));
-    }
-
-    function drawOsmItems(selection) {
-        var osmKeys = ['osm', 'notes'];
-        var osmLayers = layers.all().filter(function(obj) { return osmKeys.indexOf(obj.id) !== -1; });
-
-        var ul = selection
-            .selectAll('.layer-list-osm')
-            .data([0]);
-
-        ul = ul.enter()
-            .append('ul')
-            .attr('class', 'layer-list layer-list-osm')
-            .merge(ul);
-
-        var li = ul.selectAll('.list-item')
-            .data(osmLayers);
-
-        li.exit()
-            .remove();
-
-        var liEnter = li.enter()
-            .append('li')
-            .attr('class', function(d) { return 'list-item list-item-' + d.id; });
-
-        var labelEnter = liEnter
-            .append('label')
-            .each(function(d) {
-                if (d.id === 'osm') {
-                    d3_select(this)
-                        .call(uiTooltip()
-                            .title(() => t.append('map_data.layers.' + d.id + '.tooltip'))
-                            .keys([uiCmd('⌥' + t('area_fill.wireframe.key'))])
-                            .placement('bottom')
-                        );
-                } else {
-                    d3_select(this)
-                        .call(uiTooltip()
-                            .title(() => t.append('map_data.layers.' + d.id + '.tooltip'))
-                            .placement('bottom')
-                        );
-                }
-            });
-
-        labelEnter
-            .append('input')
-            .attr('type', 'checkbox')
-            .on('change', function(d3_event, d) { toggleLayer(d.id); });
-
-        labelEnter
-            .append('span')
-            .html(function(d) { return t.html('map_data.layers.' + d.id + '.title'); });
-
-
-        // Update
-        li
-            .merge(liEnter)
-            .classed('active', function (d) { return d.layer.enabled(); })
-            .selectAll('input')
-            .property('checked', function (d) { return d.layer.enabled(); });
-    }
-
-    function drawQAItems(selection) {
-        var qaKeys = ['keepRight', 'improveOSM', 'osmose'];
-        var qaLayers = layers.all().filter(function(obj) { return qaKeys.indexOf(obj.id) !== -1; });
-
-        var ul = selection
-            .selectAll('.layer-list-qa')
-            .data([0]);
-
-        ul = ul.enter()
-            .append('ul')
-            .attr('class', 'layer-list layer-list-qa')
-            .merge(ul);
-
-        var li = ul.selectAll('.list-item')
-            .data(qaLayers);
-
-        li.exit()
-            .remove();
-
-        var liEnter = li.enter()
-            .append('li')
-            .attr('class', function(d) { return 'list-item list-item-' + d.id; });
-
-        var labelEnter = liEnter
-            .append('label')
-            .each(function(d) {
-                d3_select(this)
-                    .call(uiTooltip()
-                        .title(() => t.append('map_data.layers.' + d.id + '.tooltip'))
-                        .placement('bottom')
-                    );
-            });
-
-        labelEnter
-            .append('input')
-            .attr('type', 'checkbox')
-            .on('change', function(d3_event, d) { toggleLayer(d.id); });
-
-        labelEnter
-            .append('span')
-            .each(function(d) { t.append('map_data.layers.' + d.id + '.title')(d3_select(this)); });
-
-
-        // Update
-        li
-            .merge(liEnter)
-            .classed('active', function (d) { return d.layer.enabled(); })
-            .selectAll('input')
-            .property('checked', function (d) { return d.layer.enabled(); });
     }
 
     // Beta feature - sample vector layers to support Detroit Mapping Challenge

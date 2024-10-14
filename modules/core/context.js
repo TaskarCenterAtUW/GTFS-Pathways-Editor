@@ -146,24 +146,24 @@ export function coreContext() {
   }
 
 
-  context.loadTiles = (projection, callback) => {
+  context.loadTiles = () => {
     const handle = window.requestIdleCallback(() => {
       _deferred.delete(handle);
-      if (_connection && context.editableDataEnabled()) {
-        const cid = _connection.getConnectionId();
-        _connection.loadTiles(projection, afterLoad(cid, callback));
-      }
+      /*
+      This previously loaded in OSM data (entities) via API.
+      Leaving in placeholder in case we want to echo approach later.
+      */
     });
     _deferred.add(handle);
   };
 
-  context.loadTileAtLoc = (loc, callback) => {
+  context.loadTileAtLoc = () => {
     const handle = window.requestIdleCallback(() => {
       _deferred.delete(handle);
-      if (_connection && context.editableDataEnabled()) {
-        const cid = _connection.getConnectionId();
-        _connection.loadTileAtLoc(loc, afterLoad(cid, callback));
-      }
+      /*
+      This previously loaded in OSM data (entities) via API.
+      Leaving in placeholder in case we want to echo approach later.
+      */
     });
     _deferred.add(handle);
   };
