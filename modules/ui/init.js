@@ -12,7 +12,6 @@ import { svgDefs, svgIcon } from '../svg';
 import { utilDetect } from '../util/detect';
 import { utilGetDimensions } from '../util/dimensions';
 
-import { uiAccount } from './account';
 import { uiAttribution } from './attribution';
 import { uiEditMenu } from './edit_menu';
 import { uiFeatureInfo } from './feature_info';
@@ -36,7 +35,6 @@ import { uiSplash } from './splash';
 import { uiStatus } from './status';
 import { uiTooltip } from './tooltip';
 import { uiTopToolbar } from './top_toolbar';
-import { uiVersion } from './version';
 import { uiZoom } from './zoom';
 import { uiZoomToSelection } from './zoom_to_selection';
 import { uiCmd } from './cmd';
